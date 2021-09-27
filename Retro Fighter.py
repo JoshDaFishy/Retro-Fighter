@@ -24,7 +24,7 @@ ADDENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(ADDENEMY, enemy_Timer)
 
 ADDCLOUD = pygame.USEREVENT + 2
-pygame.time.set_timer(ADDCLOUD, 5000)
+pygame.time.set_timer(ADDCLOUD, spawn_time)
 
 PowerUpSpawn = pygame.USEREVENT + 3
 pygame.time.set_timer(PowerUpSpawn, 5000)
