@@ -1,3 +1,4 @@
+#some credit is due to conqu3red. He helped debug many things and helped further my skill in programming.
 import random
 import pygame
 import time
@@ -26,10 +27,13 @@ ADDCLOUD = pygame.USEREVENT + 2
 pygame.time.set_timer(ADDCLOUD, 5000)
 
 PowerUpSpawn = pygame.USEREVENT + 3
-pygame.time.set_timer(PowerUpSpawn, spawn_time)
+pygame.time.set_timer(PowerUpSpawn, 5000)
 
 ShotCooldown = pygame.USEREVENT + 4
 pygame.time.set_timer(ShotCooldown, 10)
+
+PlayerImageChange = pygame.USEREVENT + 5
+pygame.time.set_timer(PlayerImageChange, 10)
 
 shot_cooldown_time = 500
 score_gap = 10000
@@ -71,7 +75,31 @@ missile_sound = pygame.mixer.Sound("assets/sfx/Missilesfx.ogg")
 plane_explode_sound = pygame.mixer.Sound("assets/sfx/planeexplode.ogg")
 explode_sound = pygame.mixer.Sound("assets/sfx/ExplodeSFX.ogg")
 
-player_surf = pygame.image.load("assets/images/jet.png").convert()
+player_surf1 = pygame.image.load("assets/images/PlayerFrame1.png").convert_alpha()
+player_surf2 = pygame.image.load("assets/images/PlayerFrame2.png").convert_alpha()
+player_surf3 = pygame.image.load("assets/images/PlayerFrame3.png").convert_alpha()
+player_surf4 = pygame.image.load("assets/images/PlayerFrame4.png").convert_alpha()
+player_surf5 = pygame.image.load("assets/images/PlayerFrame5.png").convert_alpha()
+player_surf6 = pygame.image.load("assets/images/PlayerFrame6.png").convert_alpha()
+
+playerGif = [player_surf1, player_surf2, player_surf3, player_surf4, player_surf5, player_surf6]
+
+enemy1_surf = pygame.image.load("assets/images/jet.png").convert_alpha()
+enemy1_surf = pygame.transform.smoothscale(enemy1_surf, (100,86))
+enemy1_surf.set_colorkey((0, 0, 0), RLEACCEL)
+enemy1_surf = pygame.transform.flip(enemy1_surf, False, True)
+
+nukeExplode_surf1 = pygame.image.load("assets/images/nukeExplodeFrame4.png").convert_alpha()
+nukeExplode_surf2 = pygame.image.load("assets/images/nukeExplodeFrame5.png").convert_alpha()
+nukeExplode_surf3 = pygame.image.load("assets/images/nukeExplodeFrame6.png").convert_alpha()
+nukeExplode_surf4 = pygame.image.load("assets/images/nukeExplodeFrame7.png").convert_alpha()
+nukeExplode_surf5 = pygame.image.load("assets/images/nukeExplodeFrame8.png").convert_alpha()
+nukeExplode_surf6 = pygame.image.load("assets/images/nukeExplodeFrame9.png").convert_alpha()
+nukeExplode_surf7 = pygame.image.load("assets/images/nukeExplodeFrame10.png").convert_alpha()
+nukeExplode_surf8 = pygame.image.load("assets/images/nukeExplodeFrame11.png").convert_alpha()
+nukeExplode_surf9 = pygame.image.load("assets/images/nukeExplodeFrame12.png").convert_alpha()
+
+nuke_surf = pygame.image.load("assets/images/nuke.png").convert_alpha()
 weapon_surf = pygame.image.load("assets/images/missile.png").convert_alpha()
 Enemy1weapon_surf = pygame.image.load("assets/images/blueRocketSprite.png")
 Enemy1weapon_surf = pygame.transform.rotate(Enemy1weapon_surf, 90)
@@ -79,10 +107,9 @@ Enemy2weapon_surf = pygame.image.load("assets/images/Enemy2MissileSprite.png").c
 AutoFire = pygame.image.load("assets/images/Mushroom.png").convert()
 explode1 = pygame.image.load("assets/images/explode1.png").convert_alpha()
 explode2 = pygame.image.load("assets/images/explode2.png").convert_alpha()
-jet_alive = pygame.image.load("assets/images/jet.png").convert()
-jet_dead = pygame.image.load("assets/images/jet_nolife.png").convert()
+jet_alive = pygame.image.load("assets/images/PlayerFrame4.png").convert_alpha()
+jet_dead = pygame.image.load("assets/images/PlayerNoLife.png").convert_alpha()
 arrow = pygame.image.load("assets/images/arrow.png").convert()
-enemy1_surf = pygame.image.load("assets/images/helicopter.png").convert()
 enemy2_surf = pygame.image.load("assets/images/helicopter2.png").convert()
 enemy3_surf = pygame.image.load("assets/images/sheepboss.png").convert()
 boss_surf = pygame.image.load("assets/images/BossSprite.png").convert_alpha()
@@ -200,9 +227,9 @@ cloud_surf.set_colorkey((0, 0, 0), RLEACCEL)
 up1_surf = pygame.transform.smoothscale(up1_surf, (44, 47))
 up1_surf.set_colorkey((0, 0, 0, ), RLEACCEL)
 
-enemy1_surf = pygame.transform.smoothscale(enemy1_surf, (110, 90))
-enemy1_surf.set_colorkey((0, 0, 0), RLEACCEL)
-enemy1_surf = pygame.transform.flip(enemy1_surf, True, False)
+# enemy1_surf = pygame.transform.smoothscale(enemy1_surf, (110, 90))
+# enemy1_surf.set_colorkey((0, 0, 0), RLEACCEL)
+# enemy1_surf = pygame.transform.flip(enemy1_surf, True, False)
 
 enemy2_surf = pygame.transform.smoothscale(enemy2_surf, (73, 60))
 enemy2_surf.set_colorkey((0, 0, 0), RLEACCEL)
@@ -230,6 +257,24 @@ laseFirePt4_surf = pygame.transform.smoothscale(laseFirePt4_surf, (561, 211))
 laseFirePt4_surf.set_colorkey((0, 0, 0), RLEACCEL)
 
 
+nukeExplode_surf1 = pygame.transform.smoothscale(nukeExplode_surf1, (384, 400))
+nukeExplode_surf1.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf2 = pygame.transform.smoothscale(nukeExplode_surf2, (384, 400))
+nukeExplode_surf2.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf3 = pygame.transform.smoothscale(nukeExplode_surf3, (384, 400))
+nukeExplode_surf3.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf4 = pygame.transform.smoothscale(nukeExplode_surf4, (384, 400))
+nukeExplode_surf4.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf5 = pygame.transform.smoothscale(nukeExplode_surf5, (384, 400))
+nukeExplode_surf5.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf6 = pygame.transform.smoothscale(nukeExplode_surf6, (384, 400))
+nukeExplode_surf6.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf7 = pygame.transform.smoothscale(nukeExplode_surf7, (384, 400))
+nukeExplode_surf7.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf8 = pygame.transform.smoothscale(nukeExplode_surf8, (384, 400))
+nukeExplode_surf8.set_colorkey((0, 0, 0), RLEACCEL)
+nukeExplode_surf9 = pygame.transform.smoothscale(nukeExplode_surf9, (384, 400))
+nukeExplode_surf9.set_colorkey((0, 0, 0), RLEACCEL)
 
 Enemy1weapon_surf = pygame.transform.smoothscale(Enemy1weapon_surf, (43, 28))
 Enemy1weapon_surf.set_colorkey((255, 255, 255), RLEACCEL)
@@ -241,9 +286,23 @@ boss_surf = pygame.transform.smoothscale(boss_surf, (100, 100))
 boss_surf.set_colorkey((255, 0, 0), RLEACCEL)
 # boss_surf.set_colorkey(boss_surf.get_at((0,0)))
 
-player_surf = pygame.transform.smoothscale(player_surf, (79, 46))
-player_surf.set_colorkey((0, 0, 0), RLEACCEL)
-player_surf = pygame.transform.flip(player_surf, True, False)
+player_surf1 = pygame.transform.smoothscale(player_surf1, (79, 46))
+player_surf1.set_colorkey((0, 0, 0), RLEACCEL)
+
+player_surf2 = pygame.transform.smoothscale(player_surf2, (63, 37))
+player_surf2.set_colorkey((0, 0, 0), RLEACCEL)
+
+player_surf3 = pygame.transform.smoothscale(player_surf3, (63, 37))
+player_surf3.set_colorkey((0, 0, 0), RLEACCEL)
+
+player_surf4 = pygame.transform.smoothscale(player_surf4, (63, 37))
+player_surf4.set_colorkey((0, 0, 0), RLEACCEL)
+
+player_surf5 = pygame.transform.smoothscale(player_surf5, (63, 37))
+player_surf5.set_colorkey((0, 0, 0), RLEACCEL)
+
+player_surf6 = pygame.transform.smoothscale(player_surf6, (63, 37))
+player_surf6.set_colorkey((0, 0, 0), RLEACCEL)
 
 AutoFire = pygame.transform.smoothscale(AutoFire, (60, 50))
 AutoFire.set_colorkey(AutoFire.get_at((0,0)))
@@ -263,14 +322,17 @@ explode2.set_colorkey(explode2.get_at((0,0)))
 explodes = [explode1,explode2]
 
 
-jet_alive = pygame.transform.smoothscale(jet_alive, (30, 23))
-jet_alive = pygame.transform.rotate(jet_alive, 270)
+jet_alive = pygame.transform.smoothscale(jet_alive, (30, 40))
+jet_alive = pygame.transform.rotate(jet_alive, 90)
 jet_alive.set_colorkey((0, 0, 0), RLEACCEL)
 
-jet_dead = pygame.transform.smoothscale(jet_dead, (30, 23))
-jet_dead = pygame.transform.rotate(jet_dead, 270)
+jet_dead = pygame.transform.smoothscale(jet_dead, (35, 31))
+
 jet_dead.set_colorkey((0, 0, 0), RLEACCEL)
 
+nuke_surf = pygame.transform.smoothscale(nuke_surf, (30, 40))
+nuke_surf = pygame.transform.rotate(nuke_surf, 90)
+nuke_surf.set_colorkey((0, 0, 0), RLEACCEL)
 
 arrow = pygame.transform.smoothscale(arrow, (60, 80))
 arrow = pygame.transform.rotate(arrow, 90)
@@ -308,12 +370,13 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         self.enemyspawn_timer = 2600
         self.target_second = 30
-        self.surf = player_surf.copy()
-        self.rect = self.surf.get_rect()  
+        self.surf = player_surf1.copy()
+        self.rect = self.surf.get_rect()
         self.hp = 3
         self.lives = 3
         self.score = 00000
         self.prev_score = 00000
+        self.surfStage = 0
         self.trackable_rect = self.surf.get_rect()
         self.timerStarted = False
         self.difficultyLevel = 0
@@ -358,8 +421,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = screen_width-200
         if self.rect.top <= 0 and border == True:
             self.rect.top = 0
-        if self.rect.bottom >= screen_height and border == True:
-            self.rect.bottom = screen_height
+        if self.rect.bottom >= screen_height+10 and border == True:
+            self.rect.bottom = screen_height+10
         self.trackable_rect = self.surf.get_rect()
         if self.score % 10000 == 0 and self.score > 0:
             self.score = self.score + 100
@@ -370,6 +433,16 @@ class Player(pygame.sprite.Sprite):
             new_explode = Explode(prev_player_rect_x,prev_player_rect_y,True)
             explosions.add(new_explode)
             all_sprites.add(new_explode)
+    
+    def playerImageChange(self):
+        self.surf = playerGif[self.surfStage].copy()
+        # update bounds to new surf
+        surf_rect = self.surf.get_rect()
+        self.rect.width = surf_rect.width
+        self.rect.height = surf_rect.height
+        self.surfStage += 1
+        if self.surfStage >= len(playerGif):
+            self.surfStage = 0
 
 player = Player()
 
@@ -406,15 +479,15 @@ class Missile(pygame.sprite.Sprite):
             if invincible == False:
                 self.rect = self.surf.get_rect(
                     center=(
-                        player.rect.x,
-                        player.rect.y 
+                        player.rect.x+50,
+                        player.rect.y+35 
                     )
                 ) 
             elif invincible == True:
                 self.rect = self.surf.get_rect(
                     center=(
-                        playerx,
-                        playery
+                        playerx+50,
+                        playery+35
                     )
                 )      
 
@@ -422,15 +495,15 @@ class Missile(pygame.sprite.Sprite):
             if invincible == False:
                 self.rect = self.surf.get_rect(
                     center=(
-                        player.rect.x,
-                        player.rect.y+45
+                        player.rect.x+50,
+                        player.rect.y+90
                     )
                 ) 
             elif invincible == True:
                 self.rect = self.surf.get_rect(
                     center=(
-                        playerx,
-                        playery+45
+                        playerx+50,
+                        playery+90
                     )
                 )      
 
@@ -586,7 +659,9 @@ class Explode(pygame.sprite.Sprite):
                 invincible = False
                 self.kill()
                 self.stage += 1
-    
+            surf_rect = self.surf.get_rect()
+            self.rect.width = surf_rect.width
+            self.rect.height = surf_rect.height
     def update(self):
         self.image_change()
 
@@ -1360,6 +1435,129 @@ class ExtraLifePowerUp(PowerUp):
                 player.hp = 3
                 self.enabled = False
 
+class NukePowerUp(PowerUp):
+    def __init__(self):
+        self.surf = nuke_surf.copy()
+        super().__init__()
+        self.stage = 0
+    
+    def start_powerup_action(self):
+        self.locationX = self.rect.x
+        self.locationY = self.rect.y
+        self.enabled = True
+        self.timerStart = time.time()
+    
+    def update(self):
+        super().update()
+        if self.enabled:
+            self.Animation()
+            for sprite in enemy1:
+                sprite.explode()
+            for sprite in enemy2:
+                sprite.explode()
+            for sprite in enemy3:
+                sprite.explode()
+            for sprite in boss:
+                sprite.enemy_health -= 3
+
+    def Animation(self):
+        self.timer_pause = time.time()
+        self.current_time = self.timer_pause - self.timerStart
+        
+        if self.current_time >= 0.00 and self.stage == 0:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 1", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf1.copy()
+        elif self.current_time >= 0.1 and self.stage == 1:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 2", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf2.copy()  
+        elif self.current_time >= 0.20 and self.stage == 2:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 3", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf3.copy()
+        elif self.current_time >= 0.3 and self.stage == 3:
+            self.stage += 1 
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            self.surf = nukeExplode_surf4.copy()   
+            print("the explosion is in stage 4", self.rect.x, self.rect.y)
+        elif self.current_time >= 0.4 and self.stage == 4:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 5", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf5.copy()
+        elif self.current_time >= 0.5 and self.stage == 5:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 6", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf6.copy()  
+        elif self.current_time >= 0.6 and self.stage == 6:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            ) 
+            print("the explosion is in stage 7", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf7.copy()   
+            self.rect.x = 0  
+        elif self.current_time >= 0.7 and self.stage == 7:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 8", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf8.copy()
+        elif self.current_time >= 0.8 and self.stage == 8:
+            self.stage += 1
+            self.rect = self.surf.get_rect(
+            center=(
+                300,
+                400
+                )
+            )
+            print("the explosion is in stage 9", self.rect.x, self.rect.y)
+            self.surf = nukeExplode_surf9.copy()   
+        elif self.current_time >= 0.9 and self.stage == 9:
+            self.kill()
+
 class Arrow(pygame.sprite.Sprite):
     def __init__(self):
         super(Arrow, self).__init__()
@@ -1397,7 +1595,7 @@ class Arrow(pygame.sprite.Sprite):
             player.lives = 3
             player.score = 0
             player.hp = 3
-            player.surf = player_surf.copy()
+            player.surf = player_surf1.copy()
             player.rect = player.surf.get_rect()
             for sprite in all_sprites:
                     sprite.kill()
@@ -1905,21 +2103,26 @@ while game_active:
                 new_cloud = Cloud()
                 clouds.add(new_cloud)
                 all_sprites.add(new_cloud)
+            elif event.type == PlayerImageChange:
+                player.playerImageChange()
             elif event.type == PowerUpSpawn:
                 # Create the new cloud and add it to sprite groups
                 chosen_power_up = random.randint(0,2)
                 if chosen_power_up == 0:
-                    print('I am 0')
+                    print('auto fire power up')
                     new_power_up = AutoFirePowerUp()
                     powerups.add(new_power_up)
                     all_sprites.add(new_power_up)
                 elif chosen_power_up == 1:
-                    print('I am 1')
+                    print('1 up life')
                     new_power_up = ExtraLifePowerUp()
                     powerups.add(new_power_up)
                     all_sprites.add(new_power_up)
-                elif chosen_power_up > 1:
+                elif chosen_power_up == 2:
                     print("drop bomb")
+                    new_power_up = NukePowerUp()
+                    powerups.add(new_power_up)
+                    all_sprites.add(new_power_up)
         if player.lives == 5:
             live1.swap_life(True)
             live2.swap_life(True)
