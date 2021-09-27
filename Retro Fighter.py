@@ -722,7 +722,7 @@ class Enemy1(pygame.sprite.Sprite):
         explosions.add(new_explode)
         all_sprites.add(new_explode)
         self.kill()
-        player.score = player.score + 3000
+        player.score = player.score + 100
     def update(self):
         global invincible
         self.rect.move_ip(-self.speed,0)
