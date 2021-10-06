@@ -27,7 +27,7 @@ ADDCLOUD = pygame.USEREVENT + 2
 pygame.time.set_timer(ADDCLOUD, spawn_time)
 
 PowerUpSpawn = pygame.USEREVENT + 3
-pygame.time.set_timer(PowerUpSpawn, 5000)
+pygame.time.set_timer(PowerUpSpawn, spawn_time)
 
 ShotCooldown = pygame.USEREVENT + 4
 pygame.time.set_timer(ShotCooldown, 10)
